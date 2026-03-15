@@ -1,8 +1,8 @@
-package com.techyourchance.architecture
+package com.techyourchance.architecture.common
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.techyourchance.architecture.question.FavoriteQuestion
+import com.techyourchance.architecture.domain.question.FavoriteQuestion
 
 @Database(
     entities = [

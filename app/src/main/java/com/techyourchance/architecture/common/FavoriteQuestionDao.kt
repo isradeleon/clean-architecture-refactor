@@ -1,10 +1,10 @@
-package com.techyourchance.architecture
+package com.techyourchance.architecture.common
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.techyourchance.architecture.question.FavoriteQuestion
+import com.techyourchance.architecture.domain.question.FavoriteQuestion
 import kotlinx.coroutines.flow.Flow
 
 @Dao

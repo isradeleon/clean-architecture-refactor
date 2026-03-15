@@ -1,4 +1,4 @@
-package com.techyourchance.architecture.user
+package com.techyourchance.architecture.domain.user
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
