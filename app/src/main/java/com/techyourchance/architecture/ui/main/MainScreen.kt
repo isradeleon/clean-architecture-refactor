@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -18,9 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.techyourchance.architecture.common.database.FavoriteQuestionDao
 import com.techyourchance.architecture.common.network.StackoverflowApi
+import com.techyourchance.architecture.ui.BottomTab
 import com.techyourchance.architecture.ui.Route
 import com.techyourchance.architecture.ui.favorites.FavoriteQuestionsScreen
 import com.techyourchance.architecture.ui.question_details.QuestionDetailsScreen
@@ -32,9 +35,29 @@ fun MainScreen(
     favoriteQuestionDao: FavoriteQuestionDao,
 ) {
     val parentNavController = rememberNavController()
+    val currentNavController = remember { mutableStateOf(parentNavController) }
 
-    val currentNavController = remember {
-        mutableStateOf(parentNavController)
+    val parentBackStackEntry by parentNavController.currentBackStackEntryAsState()
+
+    val currentRoute = remember(parentBackStackEntry) {
+        when(val currentRouteName = parentBackStackEntry?.destination?.route) {
+            Route.QuestionsListScreen.routeName -> Route.QuestionsListScreen
+            Route.QuestionDetailsScreen.routeName -> Route.QuestionDetailsScreen
+            Route.FavoriteQuestionsScreen.routeName -> Route.FavoriteQuestionsScreen
+            Route.MainTab.routeName -> Route.MainTab
+            Route.FavoritesTab.routeName -> Route.FavoritesTab
+            null -> null
+            else -> throw RuntimeException("unsupported route: $currentRouteName")
+        }
+    }
+
+    val currentBottomTab = remember(currentRoute) { currentRoute?.bottomTab }
+
+    val bottomTabsToRootRoutes = remember {
+        mapOf(
+            BottomTab.Main to Route.MainTab,
+            BottomTab.Favorites to Route.FavoritesTab,
+        )
     }
 
     Scaffold(
@@ -47,7 +70,21 @@ fun MainScreen(
         },
         bottomBar = {
             BottomAppBar(modifier = Modifier) {
-                MyBottomTabsBar(parentController = parentNavController)
+                MyBottomTabsBar(
+                    bottomTabs = bottomTabsToRootRoutes.keys.toList(),
+                    currentBottomTab = currentBottomTab,
+                    onTabClicked = { bottomTab ->
+                        parentNavController.navigate(bottomTabsToRootRoutes[bottomTab]!!.routeName) {
+                            parentNavController.graph.startDestinationRoute?.let { startRoute ->
+                                popUpTo(startRoute) {
+                                    saveState = true
+                                }
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                )
             }
         },
         content = { padding ->
