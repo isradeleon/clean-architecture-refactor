@@ -25,9 +25,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.techyourchance.architecture.common.database.FavoriteQuestionDao
 import com.techyourchance.architecture.common.network.StackoverflowApi
-import com.techyourchance.architecture.ui.BottomTab
-import com.techyourchance.architecture.ui.Route
 import com.techyourchance.architecture.ui.favorites.FavoriteQuestionsScreen
+import com.techyourchance.architecture.ui.navigation.BottomTab
+import com.techyourchance.architecture.ui.navigation.Route
 import com.techyourchance.architecture.ui.question_details.QuestionDetailsScreen
 import com.techyourchance.architecture.ui.questions_list.QuestionsListScreen
 
@@ -42,19 +42,14 @@ fun MainScreen(
     val parentBackStackEntry by parentNavController.currentBackStackEntryAsState()
     val currentBackStackEntry = currentNavController.value.currentBackStackEntryAsState()
 
-    val currentRoute = remember(parentBackStackEntry) {
+    val currentBottomTab = remember(parentBackStackEntry) {
         when(val currentRouteName = parentBackStackEntry?.destination?.route) {
-            Route.QuestionsListScreen.routeName -> Route.QuestionsListScreen
-            Route.QuestionDetailsScreen.routeName -> Route.QuestionDetailsScreen
-            Route.FavoriteQuestionsScreen.routeName -> Route.FavoriteQuestionsScreen
-            Route.MainTab.routeName -> Route.MainTab
-            Route.FavoritesTab.routeName -> Route.FavoritesTab
+            Route.MainTab.routeName -> BottomTab.Main
+            Route.FavoritesTab.routeName -> BottomTab.Favorites
             null -> null
             else -> throw RuntimeException("unsupported route: $currentRouteName")
         }
     }
-
-    val currentBottomTab = remember(currentRoute) { currentRoute?.bottomTab }
 
     val bottomTabsToRootRoutes = remember {
         mapOf(

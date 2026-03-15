@@ -7,7 +7,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import com.techyourchance.architecture.ui.BottomTab
+import com.techyourchance.architecture.ui.navigation.BottomTab
 
 @Composable
 fun MyBottomTabsBar(
