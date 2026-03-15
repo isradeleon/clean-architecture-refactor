@@ -1,4 +1,4 @@
-package com.techyourchance.architecture.common
+package com.techyourchance.architecture.common.network
 
 import com.techyourchance.architecture.domain.question.QuestionDetailsSchema
 import com.techyourchance.architecture.domain.question.QuestionsListSchema

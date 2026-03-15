@@ -1,4 +1,4 @@
-package com.techyourchance.architecture.common
+package com.techyourchance.architecture.common.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

@@ -70,10 +70,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.techyourchance.architecture.BuildConfig
-import com.techyourchance.architecture.common.FavoriteQuestionDao
-import com.techyourchance.architecture.common.MyRoomDatabase
+import com.techyourchance.architecture.common.database.FavoriteQuestionDao
+import com.techyourchance.architecture.common.database.MyRoomDatabase
 import com.techyourchance.architecture.R
-import com.techyourchance.architecture.common.StackoverflowApi
+import com.techyourchance.architecture.common.network.StackoverflowApi
 import com.techyourchance.architecture.domain.question.FavoriteQuestion
 import com.techyourchance.architecture.domain.question.QuestionSchema
 import com.techyourchance.architecture.domain.question.QuestionWithBodySchema
