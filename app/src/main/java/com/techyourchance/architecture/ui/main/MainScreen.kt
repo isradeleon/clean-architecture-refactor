@@ -10,10 +10,12 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -38,6 +40,7 @@ fun MainScreen(
     val currentNavController = remember { mutableStateOf(parentNavController) }
 
     val parentBackStackEntry by parentNavController.currentBackStackEntryAsState()
+    val currentBackStackEntry = currentNavController.value.currentBackStackEntryAsState()
 
     val currentRoute = remember(parentBackStackEntry) {
         when(val currentRouteName = parentBackStackEntry?.destination?.route) {
@@ -60,12 +63,48 @@ fun MainScreen(
         )
     }
 
+    val isRootRoute = remember(currentBackStackEntry.value) {
+        currentBackStackEntry.value?.destination?.route == Route.QuestionsListScreen.routeName
+    }
+
+    val isShowFavoriteButton = remember(currentBackStackEntry.value) {
+        currentBackStackEntry.value?.destination?.route == Route.QuestionDetailsScreen.routeName
+    }
+
+    val questionIdAndTitle = remember(currentBackStackEntry.value) {
+        if (isShowFavoriteButton) {
+            Pair(
+                currentBackStackEntry.value?.arguments?.getString("questionId")!!,
+                currentBackStackEntry.value?.arguments?.getString("questionTitle")!!,
+            )
+        } else {
+            Pair("", "")
+        }
+    }
+
+    var isFavoriteQuestion by remember { mutableStateOf(false) }
+    if (isShowFavoriteButton && questionIdAndTitle.first.isNotEmpty()) {
+        // Since collectAsState can't be conditionally called, use LaunchedEffect for conditional logic
+        LaunchedEffect(questionIdAndTitle) {
+            favoriteQuestionDao.observeById(questionIdAndTitle.first).collect { favoriteQuestion ->
+                isFavoriteQuestion = favoriteQuestion != null
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             MyTopAppBar(
+                isRootRoute = isRootRoute,
+                showFavoriteButton = isShowFavoriteButton,
                 favoriteQuestionDao = favoriteQuestionDao,
-                currentNavController = currentNavController.value,
-                parentNavController = parentNavController,
+                questionIdAndTitle = questionIdAndTitle,
+                isFavoriteQuestion = isFavoriteQuestion,
+                onBackClick = {
+                    if (!currentNavController.value.popBackStack()) {
+                        parentNavController.popBackStack()
+                    }
+                }
             )
         },
         bottomBar = {
