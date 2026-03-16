@@ -1,7 +1,7 @@
 package com.techyourchance.architecture.common.network
 
-import com.techyourchance.architecture.domain.question.QuestionDetailsSchema
-import com.techyourchance.architecture.domain.question.QuestionsListSchema
+import com.techyourchance.architecture.common.network.schemas.QuestionDetailsSchema
+import com.techyourchance.architecture.common.network.schemas.QuestionsListSchema
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

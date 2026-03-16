@@ -2,7 +2,8 @@ package com.techyourchance.architecture.domain.use_cases
 
 import com.techyourchance.architecture.BuildConfig
 import com.techyourchance.architecture.common.network.StackoverflowApi
-import com.techyourchance.architecture.domain.question.QuestionSchema
+import com.techyourchance.architecture.common.network.schemas.toQuestionModel
+import com.techyourchance.architecture.domain.question.Question
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -38,15 +39,19 @@ class FetchQuestionsUseCase {
         retrofit.create(StackoverflowApi::class.java)
     }
 
-    private var questions: List<QuestionSchema> = emptyList()
+    private var questions: List<Question> = emptyList()
 
     /**
      * Use cases should generally expose only 1 public function.
      * */
-    suspend fun fetch(): List<QuestionSchema> {
+    suspend fun fetch(): List<Question> {
         return if (hasEnoughTimePassed())
             withContext(Dispatchers.IO) {
-                questions = stackoverflowApi.fetchLastActiveQuestions(20)!!.questions
+                questions = stackoverflowApi
+                    .fetchLastActiveQuestions(20)!!
+                    .questions.map {
+                        it.toQuestionModel()
+                    }
                 lastNetworkRequestInNanoS = System.nanoTime()
                 questions
             }

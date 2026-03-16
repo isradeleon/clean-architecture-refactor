@@ -1,8 +1,8 @@
-package com.techyourchance.architecture.domain.question
+package com.techyourchance.architecture.common.network.schemas
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import com.techyourchance.architecture.domain.user.UserSchema
+import com.techyourchance.architecture.domain.question.Question
 
 @JsonClass(generateAdapter = true)
 data class QuestionWithBodySchema(
@@ -11,3 +11,11 @@ data class QuestionWithBodySchema(
     @Json(name = "body") val body: String,
     @Json(name = "owner") val owner: UserSchema,
 )
+
+fun QuestionWithBodySchema.toQuestionModel(): Question {
+    return Question(
+        id = id,
+        title = title,
+        body = body
+    )
+}
