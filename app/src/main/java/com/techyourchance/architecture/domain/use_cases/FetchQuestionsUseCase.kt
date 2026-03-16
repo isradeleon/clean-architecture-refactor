@@ -10,6 +10,12 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
+/**
+ * Use cases implement the Single Responsibility Principle,
+ * since they represent & encapsulate 1 single application's flow.
+ *
+ * BTW: They're also called "Interactors" sometimes.
+ * */
 class FetchQuestionsUseCase {
     private val retrofit by lazy {
         val httpClient = OkHttpClient.Builder().run {
@@ -34,6 +40,9 @@ class FetchQuestionsUseCase {
 
     private var questions: List<QuestionSchema> = emptyList()
 
+    /**
+     * Use cases should generally expose only 1 public function.
+     * */
     suspend fun fetch(
         forceUpdate: Boolean = false
     ): List<QuestionSchema> {
