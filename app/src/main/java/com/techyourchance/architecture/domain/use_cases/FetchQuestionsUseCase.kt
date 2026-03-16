@@ -1,15 +1,11 @@
 package com.techyourchance.architecture.domain.use_cases
 
-import com.techyourchance.architecture.BuildConfig
 import com.techyourchance.architecture.common.network.StackoverflowApi
 import com.techyourchance.architecture.common.network.schemas.toQuestionModel
 import com.techyourchance.architecture.domain.model.question.Question
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Inject
 
 /**
  * Use cases implement the Single Responsibility Principle,
@@ -17,28 +13,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory
  *
  * BTW: They're also called "Interactors" sometimes.
  * */
-class FetchQuestionsUseCase {
-    private val retrofit by lazy {
-        val httpClient = OkHttpClient.Builder().run {
-            addInterceptor(HttpLoggingInterceptor().apply {
-                if (BuildConfig.DEBUG) {
-                    level = HttpLoggingInterceptor.Level.BODY
-                }
-            })
-            build()
-        }
-
-        Retrofit.Builder()
-            .baseUrl("http://api.stackexchange.com/2.3/")
-            .addConverterFactory(MoshiConverterFactory.create())
-            .client(httpClient)
-            .build()
-    }
-
-    private val stackoverflowApi by lazy {
-        retrofit.create(StackoverflowApi::class.java)
-    }
-
+class FetchQuestionsUseCase @Inject constructor(
+    private val stackoverflowApi: StackoverflowApi
+) {
     private var questions: List<Question> = emptyList()
 
     /**

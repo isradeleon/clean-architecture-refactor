@@ -22,7 +22,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.techyourchance.architecture.common.database.daos.FavoriteQuestionDao
-import com.techyourchance.architecture.common.network.StackoverflowApi
 import com.techyourchance.architecture.ui.favorites.FavoriteQuestionsScreen
 import com.techyourchance.architecture.ui.navigation.Route
 import com.techyourchance.architecture.ui.navigation.ScreensNavigator
@@ -31,7 +30,6 @@ import com.techyourchance.architecture.ui.questions_list.QuestionsListScreen
 
 @Composable
 fun MainScreen(
-    stackoverflowApi: StackoverflowApi,
     favoriteQuestionDao: FavoriteQuestionDao,
 ) {
     val screensNavigator = remember { ScreensNavigator() }
@@ -82,9 +80,7 @@ fun MainScreen(
         content = { padding ->
             MainScreenContent(
                 padding = padding,
-                favoriteQuestionDao = favoriteQuestionDao,
-                screensNavigator = screensNavigator,
-                stackoverflowApi = stackoverflowApi
+                screensNavigator = screensNavigator
             )
         }
     )
@@ -93,9 +89,7 @@ fun MainScreen(
 @Composable
 private fun MainScreenContent(
     padding: PaddingValues,
-    screensNavigator: ScreensNavigator,
-    favoriteQuestionDao: FavoriteQuestionDao,
-    stackoverflowApi: StackoverflowApi
+    screensNavigator: ScreensNavigator
 ) {
     val parentNavController = rememberNavController()
     screensNavigator.setParentNavController(parentNavController)

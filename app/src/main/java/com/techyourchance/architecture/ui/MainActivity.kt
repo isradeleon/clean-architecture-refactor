@@ -4,21 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.techyourchance.architecture.common.database.MyRoomDatabase
-import com.techyourchance.architecture.common.network.StackoverflowApi
 import com.techyourchance.architecture.ui.main.MainScreen
 import dagger.hilt.android.AndroidEntryPoint
-import retrofit2.Retrofit
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     @Inject lateinit var myRoomDatabase: MyRoomDatabase
-    @Inject lateinit var retrofit: Retrofit
-
-    private val stackoverflowApi by lazy {
-        retrofit.create(StackoverflowApi::class.java)
-    }
 
     private val favoriteQuestionDao by lazy {
         myRoomDatabase.favoriteQuestionDao
@@ -29,7 +21,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyTheme {
                 MainScreen(
-                    stackoverflowApi = stackoverflowApi,
                     favoriteQuestionDao = favoriteQuestionDao
                 )
             }
