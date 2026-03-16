@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.techyourchance.architecture.common.database.FavoriteQuestionDao
 import com.techyourchance.architecture.common.network.StackoverflowApi
 import com.techyourchance.architecture.domain.question.QuestionWithBodySchema
-import com.techyourchance.architecture.domain.use_cases.FetchQuestionDetailsUseCase
+import com.techyourchance.architecture.domain.use_cases.ObserveQuestionDetailsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
@@ -14,7 +14,7 @@ class QuestionDetailsViewModel(
     favoriteQuestionDao: FavoriteQuestionDao
 ): ViewModel() {
 
-    val fetchQuestionDetailsUseCase = FetchQuestionDetailsUseCase(
+    val observeQuestionDetailsUseCase = ObserveQuestionDetailsUseCase(
         stackoverflowApi, favoriteQuestionDao
     )
 
@@ -31,9 +31,16 @@ class QuestionDetailsViewModel(
 
     suspend fun fetchDetails(questionId: String) {
         withContext(Dispatchers.Main.immediate) {
-            fetchQuestionDetailsUseCase.fetch(questionId)
+            observeQuestionDetailsUseCase.observe(questionId)
                 .collect { result ->
-                    questionDetails.value = result
+                    result?.let {
+                        questionDetails.value = QuestionDetailsResult.Success(
+                            questionDetails = result.details,
+                            isFavorite = result.isFavorite
+                        )
+                    } ?: run {
+                        questionDetails.value = QuestionDetailsResult.Error
+                    }
                 }
         }
     }
