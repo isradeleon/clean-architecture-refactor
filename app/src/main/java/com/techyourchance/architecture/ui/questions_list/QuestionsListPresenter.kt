@@ -3,10 +3,9 @@ package com.techyourchance.architecture.ui.questions_list
 import com.techyourchance.architecture.BuildConfig
 import com.techyourchance.architecture.common.network.StackoverflowApi
 import com.techyourchance.architecture.domain.question.QuestionSchema
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -34,12 +33,10 @@ class QuestionsListPresenter {
         retrofit.create(StackoverflowApi::class.java)
     }
 
-    private val scope = CoroutineScope(Dispatchers.Main.immediate)
-
     val questions = MutableStateFlow<List<QuestionSchema>>(emptyList())
 
-    fun fetchQuestions() {
-        scope.launch {
+    suspend fun fetchQuestions() {
+        withContext(Dispatchers.Main.immediate) {
             questions.value = stackoverflowApi.fetchLastActiveQuestions(20)!!.questions
         }
     }
