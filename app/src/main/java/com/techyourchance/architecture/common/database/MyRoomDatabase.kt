@@ -11,7 +11,6 @@ import com.techyourchance.architecture.common.database.entities.FavoriteEntity
     ],
     version = 1
 )
-internal abstract class MyRoomDatabase : RoomDatabase() {
-
+abstract class MyRoomDatabase : RoomDatabase() {
     abstract val favoriteQuestionDao: FavoriteQuestionDao
 }

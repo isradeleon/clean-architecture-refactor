@@ -1,22 +1,18 @@
 package com.techyourchance.architecture.ui.question_details
 
 import androidx.lifecycle.ViewModel
-import com.techyourchance.architecture.common.database.daos.FavoriteQuestionDao
-import com.techyourchance.architecture.common.network.StackoverflowApi
 import com.techyourchance.architecture.domain.model.question.Question
 import com.techyourchance.architecture.domain.use_cases.ObserveQuestionDetailsUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class QuestionDetailsViewModel(
-    stackoverflowApi: StackoverflowApi,
-    favoriteQuestionDao: FavoriteQuestionDao
+@HiltViewModel
+class QuestionDetailsViewModel @Inject constructor(
+    private val observeQuestionDetailsUseCase: ObserveQuestionDetailsUseCase
 ): ViewModel() {
-
-    val observeQuestionDetailsUseCase = ObserveQuestionDetailsUseCase(
-        stackoverflowApi, favoriteQuestionDao
-    )
 
     val questionDetails = MutableStateFlow<QuestionDetailsResult>(QuestionDetailsResult.None)
 

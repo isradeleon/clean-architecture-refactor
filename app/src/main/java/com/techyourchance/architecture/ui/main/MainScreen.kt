@@ -104,28 +104,6 @@ private fun MainScreenContent(
     val parentNavController = rememberNavController()
     screensNavigator.setParentNavController(parentNavController)
 
-    val vmFactory = object: ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return when {
-                modelClass.isAssignableFrom(
-                    QuestionDetailsViewModel::class.java
-                ) -> QuestionDetailsViewModel(
-                    stackoverflowApi = stackoverflowApi,
-                    favoriteQuestionDao = favoriteQuestionDao
-                ) as T
-
-                modelClass.isAssignableFrom(
-                    FavoriteQuestionsViewModel::class.java
-                ) -> FavoriteQuestionsViewModel(
-                    favoriteQuestionDao = favoriteQuestionDao
-                ) as T
-
-                else -> super.create(modelClass)
-            }
-        }
-    }
-
     Surface(
         modifier = Modifier
             .padding(padding)
@@ -156,7 +134,6 @@ private fun MainScreenContent(
                     }
                     composable(route = Route.QuestionDetailsScreen().routeName) { backStackEntry ->
                         QuestionDetailsScreen(
-                            vmFactory = vmFactory,
                             questionId = backStackEntry.arguments?.getString("questionId")!!,
                             onError = { screensNavigator.navigateBack() }
                         )
@@ -172,7 +149,6 @@ private fun MainScreenContent(
                 NavHost(navController = favoritesNestedNavController, startDestination = Route.FavoriteQuestionsScreen.routeName) {
                     composable(route = Route.FavoriteQuestionsScreen.routeName) {
                         FavoriteQuestionsScreen(
-                            vmFactory = vmFactory,
                             onQuestionClicked = { favoriteQuestionId, favoriteQuestionTitle ->
                                 screensNavigator.toRoute(
                                     Route.QuestionDetailsScreen(
@@ -184,7 +160,6 @@ private fun MainScreenContent(
                     }
                     composable(route = Route.QuestionDetailsScreen().routeName) { backStackEntry ->
                         QuestionDetailsScreen(
-                            vmFactory = vmFactory,
                             questionId = backStackEntry.arguments?.getString("questionId")!!,
                             onError = { screensNavigator.navigateBack() }
                         )

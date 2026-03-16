@@ -19,13 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun QuestionDetailsScreen(
-    vmFactory: ViewModelProvider.Factory,
-    questionDetailsViewModel: QuestionDetailsViewModel = viewModel(factory = vmFactory),
+    questionDetailsViewModel: QuestionDetailsViewModel = hiltViewModel(),
     questionId: String,
     onError: () -> Unit
 ) {
