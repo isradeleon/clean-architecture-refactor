@@ -43,10 +43,8 @@ class FetchQuestionsUseCase {
     /**
      * Use cases should generally expose only 1 public function.
      * */
-    suspend fun fetch(
-        forceUpdate: Boolean = false
-    ): List<QuestionSchema> {
-        return if (hasEnoughTimePassed() || forceUpdate)
+    suspend fun fetch(): List<QuestionSchema> {
+        return if (hasEnoughTimePassed())
             withContext(Dispatchers.IO) {
                 questions = stackoverflowApi.fetchLastActiveQuestions(20)!!.questions
                 lastNetworkRequestInNanoS = System.nanoTime()

@@ -35,7 +35,9 @@ fun QuestionsListScreen(
     val refreshState = rememberPullToRefreshState()
     if (refreshState.isRefreshing) {
         LaunchedEffect(Unit) {
-            questionsListViewModel.fetchQuestions()
+            questionsListViewModel.fetchQuestions(
+                forceUpdate = true
+            )
             refreshState.endRefresh()
         }
     }

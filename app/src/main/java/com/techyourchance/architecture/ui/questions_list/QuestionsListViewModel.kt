@@ -12,9 +12,12 @@ class QuestionsListViewModel: ViewModel() {
 
     val questions = MutableStateFlow<List<QuestionSchema>>(emptyList())
 
-    suspend fun fetchQuestions() {
-        withContext(Dispatchers.Main.immediate) {
-            questions.value = fetchQuestionsUseCase.fetch()
-        }
+    suspend fun fetchQuestions(
+        forceUpdate: Boolean = false
+    ) {
+        if (forceUpdate || questions.value.isEmpty())
+            withContext(Dispatchers.Main.immediate) {
+                questions.value = fetchQuestionsUseCase.fetch()
+            }
     }
 }
