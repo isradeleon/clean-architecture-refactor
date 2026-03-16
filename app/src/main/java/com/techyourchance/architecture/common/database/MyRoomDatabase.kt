@@ -2,11 +2,12 @@ package com.techyourchance.architecture.common.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.techyourchance.architecture.domain.model.question.FavoriteQuestion
+import com.techyourchance.architecture.common.database.daos.FavoriteQuestionDao
+import com.techyourchance.architecture.common.database.entities.FavoriteEntity
 
 @Database(
     entities = [
-        FavoriteQuestion::class
+        FavoriteEntity::class
     ],
     version = 1
 )

@@ -1,6 +1,6 @@
 package com.techyourchance.architecture.domain.use_cases
 
-import com.techyourchance.architecture.common.database.FavoriteQuestionDao
+import com.techyourchance.architecture.common.database.daos.FavoriteQuestionDao
 import com.techyourchance.architecture.common.network.StackoverflowApi
 import com.techyourchance.architecture.common.network.schemas.toQuestionModel
 import com.techyourchance.architecture.domain.model.question.QuestionDetailsWrapper

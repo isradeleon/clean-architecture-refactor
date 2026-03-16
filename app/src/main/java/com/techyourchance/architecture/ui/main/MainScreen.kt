@@ -23,7 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.techyourchance.architecture.common.database.FavoriteQuestionDao
+import com.techyourchance.architecture.common.database.daos.FavoriteQuestionDao
 import com.techyourchance.architecture.common.network.StackoverflowApi
 import com.techyourchance.architecture.ui.favorites.FavoriteQuestionsScreen
 import com.techyourchance.architecture.ui.favorites.FavoriteQuestionsViewModel

@@ -18,8 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.techyourchance.architecture.R
-import com.techyourchance.architecture.common.database.FavoriteQuestionDao
-import com.techyourchance.architecture.domain.model.question.FavoriteQuestion
+import com.techyourchance.architecture.common.database.daos.FavoriteQuestionDao
+import com.techyourchance.architecture.common.database.entities.FavoriteEntity
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +70,7 @@ fun MyTopAppBar(
                                 favoriteQuestionDao.delete(questionIdAndTitle.first)
                             } else {
                                 favoriteQuestionDao.upsert(
-                                    FavoriteQuestion(
+                                    FavoriteEntity(
                                         questionIdAndTitle.first,
                                         questionIdAndTitle.second
                                     )
