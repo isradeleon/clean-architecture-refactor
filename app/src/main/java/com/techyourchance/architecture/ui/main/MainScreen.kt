@@ -27,6 +27,7 @@ import com.techyourchance.architecture.ui.favorites.FavoriteQuestionsScreen
 import com.techyourchance.architecture.ui.navigation.Route
 import com.techyourchance.architecture.ui.navigation.ScreensNavigator
 import com.techyourchance.architecture.ui.question_details.QuestionDetailsScreen
+import com.techyourchance.architecture.ui.questions_list.QuestionsListPresenter
 import com.techyourchance.architecture.ui.questions_list.QuestionsListScreen
 
 @Composable
@@ -105,6 +106,8 @@ private fun MainScreenContent(
             .padding(padding)
             .padding(horizontal = 12.dp),
     ) {
+        val questionsListPresenter = remember { QuestionsListPresenter() }
+
         NavHost(
             modifier = Modifier.fillMaxSize(),
             navController = parentNavController,
@@ -119,7 +122,7 @@ private fun MainScreenContent(
                 NavHost(navController = mainNestedNavController, startDestination = Route.QuestionsListScreen.routeName) {
                     composable(route = Route.QuestionsListScreen.routeName) {
                         QuestionsListScreen(
-                            stackoverflowApi = stackoverflowApi,
+                            questionsListPresenter = questionsListPresenter,
                             onQuestionClicked = { clickedQuestionId, clickedQuestionTitle ->
                                 screensNavigator.toRoute(
                                     Route.QuestionDetailsScreen(
