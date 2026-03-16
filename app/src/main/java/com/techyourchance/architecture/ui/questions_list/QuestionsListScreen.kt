@@ -11,18 +11,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.techyourchance.architecture.ui.common.composables.QuestionItem
 
 @Composable
 fun QuestionsListScreen(
-    questionsListPresenter: QuestionsListPresenter,
+    questionsListViewModel: QuestionsListViewModel = viewModel(),
     onQuestionClicked: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val questions = questionsListPresenter.questions.collectAsState()
+    val questions = questionsListViewModel.questions.collectAsState()
     LaunchedEffect(Unit) {
         if (questions.value.isEmpty())
-            questionsListPresenter.fetchQuestions()
+            questionsListViewModel.fetchQuestions()
     }
 
     LazyColumn(

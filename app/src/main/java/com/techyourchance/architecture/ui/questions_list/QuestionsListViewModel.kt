@@ -1,5 +1,6 @@
 package com.techyourchance.architecture.ui.questions_list
 
+import androidx.lifecycle.ViewModel
 import com.techyourchance.architecture.BuildConfig
 import com.techyourchance.architecture.common.network.StackoverflowApi
 import com.techyourchance.architecture.domain.question.QuestionSchema
@@ -11,7 +12,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-class QuestionsListPresenter {
+class QuestionsListViewModel: ViewModel() {
     private val retrofit by lazy {
         val httpClient = OkHttpClient.Builder().run {
             addInterceptor(HttpLoggingInterceptor().apply {
