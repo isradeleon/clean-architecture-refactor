@@ -1,4 +1,4 @@
-package com.techyourchance.architecture.domain.question
+package com.techyourchance.architecture.domain.model.question
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

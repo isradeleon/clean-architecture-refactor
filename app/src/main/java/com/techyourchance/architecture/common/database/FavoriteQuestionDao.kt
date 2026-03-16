@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.techyourchance.architecture.domain.question.FavoriteQuestion
+import com.techyourchance.architecture.domain.model.question.FavoriteQuestion
 import kotlinx.coroutines.flow.Flow
 
 @Dao

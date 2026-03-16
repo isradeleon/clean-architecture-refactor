@@ -2,7 +2,7 @@ package com.techyourchance.architecture.common.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.techyourchance.architecture.domain.question.FavoriteQuestion
+import com.techyourchance.architecture.domain.model.question.FavoriteQuestion
 
 @Database(
     entities = [

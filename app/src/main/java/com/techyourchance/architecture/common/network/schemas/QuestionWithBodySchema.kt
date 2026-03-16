@@ -2,7 +2,7 @@ package com.techyourchance.architecture.common.network.schemas
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import com.techyourchance.architecture.domain.question.Question
+import com.techyourchance.architecture.domain.model.question.Question
 
 @JsonClass(generateAdapter = true)
 data class QuestionWithBodySchema(

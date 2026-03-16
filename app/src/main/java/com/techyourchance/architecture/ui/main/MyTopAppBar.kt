@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.techyourchance.architecture.R
 import com.techyourchance.architecture.common.database.FavoriteQuestionDao
-import com.techyourchance.architecture.domain.question.FavoriteQuestion
+import com.techyourchance.architecture.domain.model.question.FavoriteQuestion
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

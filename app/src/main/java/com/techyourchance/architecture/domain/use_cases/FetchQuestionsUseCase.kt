@@ -3,7 +3,7 @@ package com.techyourchance.architecture.domain.use_cases
 import com.techyourchance.architecture.BuildConfig
 import com.techyourchance.architecture.common.network.StackoverflowApi
 import com.techyourchance.architecture.common.network.schemas.toQuestionModel
-import com.techyourchance.architecture.domain.question.Question
+import com.techyourchance.architecture.domain.model.question.Question
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient

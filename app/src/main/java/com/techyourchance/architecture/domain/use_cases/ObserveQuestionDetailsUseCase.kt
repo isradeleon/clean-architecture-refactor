@@ -3,7 +3,7 @@ package com.techyourchance.architecture.domain.use_cases
 import com.techyourchance.architecture.common.database.FavoriteQuestionDao
 import com.techyourchance.architecture.common.network.StackoverflowApi
 import com.techyourchance.architecture.common.network.schemas.toQuestionModel
-import com.techyourchance.architecture.domain.question.QuestionDetailsWrapper
+import com.techyourchance.architecture.domain.model.question.QuestionDetailsWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

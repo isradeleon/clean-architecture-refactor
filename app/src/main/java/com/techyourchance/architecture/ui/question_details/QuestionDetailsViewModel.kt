@@ -3,7 +3,7 @@ package com.techyourchance.architecture.ui.question_details
 import androidx.lifecycle.ViewModel
 import com.techyourchance.architecture.common.database.FavoriteQuestionDao
 import com.techyourchance.architecture.common.network.StackoverflowApi
-import com.techyourchance.architecture.domain.question.Question
+import com.techyourchance.architecture.domain.model.question.Question
 import com.techyourchance.architecture.domain.use_cases.ObserveQuestionDetailsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
