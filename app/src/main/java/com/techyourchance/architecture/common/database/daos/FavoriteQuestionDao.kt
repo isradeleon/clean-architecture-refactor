@@ -18,6 +18,9 @@ interface FavoriteQuestionDao {
     @Query("SELECT * FROM favorite WHERE id = :id")
     fun observeById(id: String): Flow<FavoriteEntity?>
 
+    @Query("SELECT * FROM favorite WHERE id = :id")
+    fun getById(id: String): FavoriteEntity?
+
     @Query("DELETE FROM favorite WHERE id = :id")
     suspend fun delete(id: String)
 

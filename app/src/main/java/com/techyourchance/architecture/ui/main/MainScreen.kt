@@ -18,10 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.techyourchance.architecture.common.database.daos.FavoriteQuestionDao
 import com.techyourchance.architecture.ui.favorites.FavoriteQuestionsScreen
 import com.techyourchance.architecture.ui.navigation.Route
 import com.techyourchance.architecture.ui.navigation.ScreensNavigator
@@ -30,7 +30,7 @@ import com.techyourchance.architecture.ui.questions_list.QuestionsListScreen
 
 @Composable
 fun MainScreen(
-    favoriteQuestionDao: FavoriteQuestionDao,
+    viewModel: MainScreenViewModel = hiltViewModel()
 ) {
     val screensNavigator = remember { ScreensNavigator() }
 
@@ -51,8 +51,8 @@ fun MainScreen(
     var isFavoriteQuestion by remember { mutableStateOf(false) }
     if (isShowFavoriteButton && questionIdAndTitle.first.isNotEmpty()) {
         LaunchedEffect(questionIdAndTitle) {
-            favoriteQuestionDao.observeById(questionIdAndTitle.first).collect { favoriteQuestion ->
-                isFavoriteQuestion = favoriteQuestion != null
+            viewModel.isQuestionInFavorites(questionIdAndTitle.first).collect {
+                isFavoriteQuestion = it
             }
         }
     }
@@ -62,10 +62,14 @@ fun MainScreen(
             MyTopAppBar(
                 isRootRoute = isRootRoute.value,
                 showFavoriteButton = isShowFavoriteButton,
-                favoriteQuestionDao = favoriteQuestionDao,
-                questionIdAndTitle = questionIdAndTitle,
                 isFavoriteQuestion = isFavoriteQuestion,
-                onBackClick = { screensNavigator.navigateBack() }
+                onBackClick = { screensNavigator.navigateBack() },
+                onToggleFavorite = {
+                    viewModel.toggleFavoriteQuestion(
+                        questionIdAndTitle.first,
+                        questionIdAndTitle.second
+                    )
+                }
             )
         },
         bottomBar = {
