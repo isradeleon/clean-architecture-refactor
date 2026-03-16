@@ -14,15 +14,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.techyourchance.architecture.common.database.FavoriteQuestionDao
 import com.techyourchance.architecture.ui.common.composables.QuestionItem
 
 @Composable
 fun FavoriteQuestionsScreen(
-    favoriteQuestionDao: FavoriteQuestionDao,
+    favoriteQuestionsPresenter: FavoriteQuestionsPresenter,
     onQuestionClicked: (String,String) -> Unit
 ) {
-    val favorites = favoriteQuestionDao.observe().collectAsState(initial = listOf())
+    val favorites = favoriteQuestionsPresenter.favoriteQuestions
+        .collectAsState(initial = listOf())
 
     if (favorites.value.isNotEmpty()) {
         LazyColumn(

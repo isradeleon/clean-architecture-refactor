@@ -17,12 +17,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.techyourchance.architecture.common.database.FavoriteQuestionDao
 import com.techyourchance.architecture.common.network.StackoverflowApi
+import com.techyourchance.architecture.ui.favorites.FavoriteQuestionsPresenter
 import com.techyourchance.architecture.ui.favorites.FavoriteQuestionsScreen
 import com.techyourchance.architecture.ui.navigation.Route
 import com.techyourchance.architecture.ui.navigation.ScreensNavigator
@@ -98,6 +100,7 @@ private fun MainScreenContent(
     stackoverflowApi: StackoverflowApi,
     favoriteQuestionDao: FavoriteQuestionDao,
 ) {
+    val currentContext = LocalContext.current
     val parentNavController = rememberNavController()
     screensNavigator.setParentNavController(parentNavController)
 
@@ -107,6 +110,9 @@ private fun MainScreenContent(
             .padding(horizontal = 12.dp),
     ) {
         val questionsListPresenter = remember { QuestionsListPresenter() }
+        val favoriteQuestionsPresenter = remember {
+            FavoriteQuestionsPresenter(currentContext)
+        }
 
         NavHost(
             modifier = Modifier.fillMaxSize(),
@@ -151,7 +157,7 @@ private fun MainScreenContent(
                 NavHost(navController = favoritesNestedNavController, startDestination = Route.FavoriteQuestionsScreen.routeName) {
                     composable(route = Route.FavoriteQuestionsScreen.routeName) {
                         FavoriteQuestionsScreen(
-                            favoriteQuestionDao = favoriteQuestionDao,
+                            favoriteQuestionsPresenter = favoriteQuestionsPresenter,
                             onQuestionClicked = { favoriteQuestionId, favoriteQuestionTitle ->
                                 screensNavigator.toRoute(
                                     Route.QuestionDetailsScreen(
