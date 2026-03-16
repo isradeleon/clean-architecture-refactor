@@ -4,17 +4,19 @@ import androidx.lifecycle.ViewModel
 import com.techyourchance.architecture.common.database.FavoriteQuestionDao
 import com.techyourchance.architecture.common.network.StackoverflowApi
 import com.techyourchance.architecture.domain.question.QuestionWithBodySchema
+import com.techyourchance.architecture.domain.use_cases.FetchQuestionDetailsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
 class QuestionDetailsViewModel(
-    private val stackoverflowApi: StackoverflowApi,
-    private val favoriteQuestionDao: FavoriteQuestionDao
+    stackoverflowApi: StackoverflowApi,
+    favoriteQuestionDao: FavoriteQuestionDao
 ): ViewModel() {
+
+    val fetchQuestionDetailsUseCase = FetchQuestionDetailsUseCase(
+        stackoverflowApi, favoriteQuestionDao
+    )
 
     val questionDetails = MutableStateFlow<QuestionDetailsResult>(QuestionDetailsResult.None)
 
@@ -29,27 +31,10 @@ class QuestionDetailsViewModel(
 
     suspend fun fetchDetails(questionId: String) {
         withContext(Dispatchers.Main.immediate) {
-            combine(
-                flow = flow {
-                    emit(
-                        stackoverflowApi.fetchQuestionDetails(questionId)
-                    )
-                },
-                flow2 = favoriteQuestionDao.observeById(questionId)
-            ) { details, favoriteQuestion ->
-                if (details != null && details.questions.isNotEmpty()) {
-                    QuestionDetailsResult.Success(
-                        questionDetails = details.questions[0],
-                        isFavorite = favoriteQuestion != null
-                    )
-                } else {
-                    QuestionDetailsResult.Error
+            fetchQuestionDetailsUseCase.fetch(questionId)
+                .collect { result ->
+                    questionDetails.value = result
                 }
-            }.catch {
-                questionDetails.value = QuestionDetailsResult.Error
-            }.collect { result ->
-                questionDetails.value = result
-            }
         }
     }
 }
