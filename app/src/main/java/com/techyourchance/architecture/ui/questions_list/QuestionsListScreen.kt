@@ -29,8 +29,7 @@ fun QuestionsListScreen(
 ) {
     val questions = questionsListViewModel.questions.collectAsState()
     LaunchedEffect(Unit) {
-        if (questions.value.isEmpty())
-            questionsListViewModel.fetchQuestions()
+        questionsListViewModel.fetchQuestions()
     }
 
     val refreshState = rememberPullToRefreshState()

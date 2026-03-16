@@ -35,10 +35,24 @@ class QuestionsListViewModel: ViewModel() {
     }
 
     val questions = MutableStateFlow<List<QuestionSchema>>(emptyList())
+    private var lastNetworkRequestInNanoS = 0L
 
-    suspend fun fetchQuestions() {
-        withContext(Dispatchers.Main.immediate) {
-            questions.value = stackoverflowApi.fetchLastActiveQuestions(20)!!.questions
-        }
+    private fun hasEnoughTimePassed(): Boolean {
+        return System.nanoTime() - lastNetworkRequestInNanoS > THROTTLE_TIME_OUT
+    }
+
+    suspend fun fetchQuestions(
+        forceUpdate: Boolean = false
+    ) {
+        if (hasEnoughTimePassed() || forceUpdate)
+            withContext(Dispatchers.Main.immediate) {
+                questions.value = stackoverflowApi.fetchLastActiveQuestions(20)!!.questions
+                lastNetworkRequestInNanoS = System.nanoTime()
+            }
+    }
+
+    companion object {
+        // Milliseconds to nano seconds conversion
+        const val THROTTLE_TIME_OUT = 5000L * 1_000_000L
     }
 }
