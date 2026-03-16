@@ -18,6 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -28,6 +30,7 @@ import com.techyourchance.architecture.ui.favorites.FavoriteQuestionsScreen
 import com.techyourchance.architecture.ui.navigation.Route
 import com.techyourchance.architecture.ui.navigation.ScreensNavigator
 import com.techyourchance.architecture.ui.question_details.QuestionDetailsScreen
+import com.techyourchance.architecture.ui.question_details.QuestionDetailsViewModel
 import com.techyourchance.architecture.ui.questions_list.QuestionsListScreen
 
 @Composable
@@ -83,9 +86,9 @@ fun MainScreen(
         content = { padding ->
             MainScreenContent(
                 padding = padding,
-                stackoverflowApi = stackoverflowApi,
                 favoriteQuestionDao = favoriteQuestionDao,
-                screensNavigator = screensNavigator
+                screensNavigator = screensNavigator,
+                stackoverflowApi = stackoverflowApi
             )
         }
     )
@@ -95,11 +98,29 @@ fun MainScreen(
 private fun MainScreenContent(
     padding: PaddingValues,
     screensNavigator: ScreensNavigator,
-    stackoverflowApi: StackoverflowApi,
     favoriteQuestionDao: FavoriteQuestionDao,
+    stackoverflowApi: StackoverflowApi
 ) {
     val parentNavController = rememberNavController()
     screensNavigator.setParentNavController(parentNavController)
+
+    val vmFactory = object: ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (
+                modelClass.isAssignableFrom(
+                    QuestionDetailsViewModel::class.java
+                )
+            ) {
+                return QuestionDetailsViewModel(
+                    stackoverflowApi = stackoverflowApi,
+                    favoriteQuestionDao = favoriteQuestionDao
+                ) as T
+            }
+
+            return super.create(modelClass)
+        }
+    }
 
     Surface(
         modifier = Modifier
@@ -135,9 +156,8 @@ private fun MainScreenContent(
                     }
                     composable(route = Route.QuestionDetailsScreen().routeName) { backStackEntry ->
                         QuestionDetailsScreen(
+                            vmFactory = vmFactory,
                             questionId = backStackEntry.arguments?.getString("questionId")!!,
-                            stackoverflowApi = stackoverflowApi,
-                            favoriteQuestionDao = favoriteQuestionDao,
                             onError = { screensNavigator.navigateBack() }
                         )
                     }
@@ -164,9 +184,8 @@ private fun MainScreenContent(
                     }
                     composable(route = Route.QuestionDetailsScreen().routeName) { backStackEntry ->
                         QuestionDetailsScreen(
+                            vmFactory = vmFactory,
                             questionId = backStackEntry.arguments?.getString("questionId")!!,
-                            stackoverflowApi = stackoverflowApi,
-                            favoriteQuestionDao = favoriteQuestionDao,
                             onError = { screensNavigator.navigateBack() }
                         )
                     }
