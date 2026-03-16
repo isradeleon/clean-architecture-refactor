@@ -25,8 +25,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.techyourchance.architecture.common.database.FavoriteQuestionDao
 import com.techyourchance.architecture.common.network.StackoverflowApi
-import com.techyourchance.architecture.ui.favorites.FavoriteQuestionsPresenter
 import com.techyourchance.architecture.ui.favorites.FavoriteQuestionsScreen
+import com.techyourchance.architecture.ui.favorites.FavoriteQuestionsViewModel
 import com.techyourchance.architecture.ui.navigation.Route
 import com.techyourchance.architecture.ui.navigation.ScreensNavigator
 import com.techyourchance.architecture.ui.question_details.QuestionDetailsScreen
@@ -107,18 +107,22 @@ private fun MainScreenContent(
     val vmFactory = object: ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (
+            return when {
                 modelClass.isAssignableFrom(
                     QuestionDetailsViewModel::class.java
-                )
-            ) {
-                return QuestionDetailsViewModel(
+                ) -> QuestionDetailsViewModel(
                     stackoverflowApi = stackoverflowApi,
                     favoriteQuestionDao = favoriteQuestionDao
                 ) as T
-            }
 
-            return super.create(modelClass)
+                modelClass.isAssignableFrom(
+                    FavoriteQuestionsViewModel::class.java
+                ) -> FavoriteQuestionsViewModel(
+                    favoriteQuestionDao = favoriteQuestionDao
+                ) as T
+
+                else -> super.create(modelClass)
+            }
         }
     }
 
@@ -127,10 +131,6 @@ private fun MainScreenContent(
             .padding(padding)
             .padding(horizontal = 12.dp),
     ) {
-        val favoriteQuestionsPresenter = remember {
-            FavoriteQuestionsPresenter(favoriteQuestionDao)
-        }
-
         NavHost(
             modifier = Modifier.fillMaxSize(),
             navController = parentNavController,
@@ -172,7 +172,7 @@ private fun MainScreenContent(
                 NavHost(navController = favoritesNestedNavController, startDestination = Route.FavoriteQuestionsScreen.routeName) {
                     composable(route = Route.FavoriteQuestionsScreen.routeName) {
                         FavoriteQuestionsScreen(
-                            favoriteQuestionsPresenter = favoriteQuestionsPresenter,
+                            vmFactory = vmFactory,
                             onQuestionClicked = { favoriteQuestionId, favoriteQuestionTitle ->
                                 screensNavigator.toRoute(
                                     Route.QuestionDetailsScreen(
